@@ -126,4 +126,5 @@ def callback_worker(call):
 
 # Запускаем постоянный опрос бота в Телеграме
 
-bot.polling(none_stop=True, interval=0)
+#bot.polling(none_stop=True, interval=0)
+bot.polling(none_stop=True, interval=1)  #test. delete. for git
