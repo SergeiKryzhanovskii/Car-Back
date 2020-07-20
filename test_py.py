@@ -6,15 +6,14 @@ import random
 import telebot
 
 # Указываем токен
-from telebot import apihelper
-
-sox = 'socks5://95.216.33.245:10464'
-apihelper.proxy ={'https': sox}
-bot = telebot.TeleBot('')
+#from telebot import apihelper
+from telebot import types
+#sox = 'socks5://95.216.33.245:10464'
+#apihelper.proxy ={'https': sox}
+bot = telebot.TeleBot('1222423238:AAFHFMtwzVGjiM_YWHB-ef8rpfoe0aTysSA')
 
 # Импортируем типы из модуля, чтобы создавать кнопки
 
-from telebot import types
 
 # Заготовки для трёх предложений
 
