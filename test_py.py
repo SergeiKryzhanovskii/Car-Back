@@ -10,7 +10,7 @@ import telebot
 from telebot import types
 #sox = 'socks5://95.216.33.245:10464'
 #apihelper.proxy ={'https': sox}
-bot = telebot.TeleBot('1222423238:AAFHFMtwzVGjiM_YWHB-ef8rpfoe0aTysSA')
+bot = telebot.TeleBot('')
 
 # Импортируем типы из модуля, чтобы создавать кнопки
 
