@@ -7,13 +7,13 @@ import telebot
 
 # Указываем токен
 #from telebot import apihelper
-from telebot import types
 #sox = 'socks5://95.216.33.245:10464'
 #apihelper.proxy ={'https': sox}
 bot = telebot.TeleBot('')
 
 # Импортируем типы из модуля, чтобы создавать кнопки
 
+from telebot import types
 
 # Заготовки для трёх предложений
 
@@ -124,6 +124,5 @@ def callback_worker(call):
 
 
 # Запускаем постоянный опрос бота в Телеграме
+bot.polling(none_stop=True, interval=0)
 
-#bot.polling(none_stop=True, interval=0)
-bot.polling(none_stop=True, interval=1)  #test. delete. for git
