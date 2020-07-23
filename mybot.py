@@ -44,16 +44,27 @@ def send_welcome(message):
 
 @bot.message_handler(commands=['random'])
 def random_page(message):
-    random_pg = wikipedia.random(pages=1)
-    red = search_wiki(random_pg)
-    bot.send_message(message.from_user.id, red)
-    url = return_url(random_pg)
-    bot.send_message(message.from_user.id, url)
-
-
-@bot.message_handler(commands=['language'])
-def change_language(message):
-    pass
+    try:
+        random_pg = wikipedia.random(pages=1)
+        red = search_wiki(random_pg)
+        bot.send_message(message.from_user.id, red)
+        url = return_url(random_pg)
+        bot.send_message(message.from_user.id, url)
+    except wikipedia.exceptions.DisambiguationError:
+        msg = 'Упс, я озадачен твоим запросом, уж больно много вариантов. \nПопробуй уточнить:'
+        bot.send_message(message.from_user.id, msg)
+    except wikipedia.exceptions.HTTPTimeoutError:
+        msg = 'Упс, видимо, мне не хотят отвечать... \nДавай  подождём, пусть они там немного разгрузятся.'
+        bot.send_message(message.from_user.id, msg)
+    except wikipedia.exceptions.PageError:
+        msg = 'Упс, видимо, такой статьи не существует... \nПопробуй поискать что-нибудь другое.'
+        bot.send_message(message.from_user.id, msg)
+    except wikipedia.exceptions.RedirectError:
+        msg = 'Упс, нас пытаютсякуда-то перенаправить... \nПопробуй поискать еще раз.'
+        bot.send_message(message.from_user.id, msg)
+    except wikipedia.exceptions.WikipediaException:
+        msg = 'Упс, что-то пошло не так... \nПопробуй поискать еще раз.'
+        bot.send_message(message.from_user.id, msg)
 
 
 @bot.message_handler(content_types=["text"])
@@ -62,6 +73,13 @@ def get_text_message(message):
         send_welcome(message)
     elif message.text == 'Мне повезёт!':
         random_page(message)
+    elif message.text == 'Настройка':
+        keyboard = types.InlineKeyboardMarkup()
+        key_ru = types.InlineKeyboardButton(text='ru', callback_data='val_ru')
+        keyboard.add(key_ru)
+        key_en = types.InlineKeyboardButton(text='en', callback_data='val_en')
+        keyboard.add(key_en)
+        bot.send_message(message.from_user.id, text='Выбери язык, на котором тебе нужно напечатать статью.', reply_markup=keyboard)
     else:
         try:
             query = message.text
@@ -84,6 +102,18 @@ def get_text_message(message):
         except wikipedia.exceptions.WikipediaException:
             msg = 'Упс, что-то пошло не так... \nПопробуй поискать еще раз.'
             bot.send_message(message.from_user.id, msg)
+
+
+@bot.callback_query_handler(func=lambda call: True)
+def call_worker(call):
+    global language
+    if call.data == 'val_ru':
+        wikipedia.set_lang('ru')
+        language = 'ru'
+    elif call.data == 'val_en':
+        wikipedia.set_lang('en')
+        language = 'en'
+
 
 
 bot.polling(none_stop=True, interval=0)
