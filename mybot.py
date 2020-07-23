@@ -2,6 +2,8 @@ import telebot
 import wikipedia
 import config
 from telebot import types
+from wikipedia import exceptions
+
 
 """Функция поиска в Вики"""
 def search_wiki(query):
@@ -33,10 +35,10 @@ def send_welcome(message):
     bot.send_photo(message.from_user.id, photo)
     msg = 'Привет, я бот-помощник для поиска в Википедии.\n' + 'Напиши мне, что нужно найти ' + glass + ':'
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
-    itembtna = types.KeyboardButton('В начало')
-    itembtnv = types.KeyboardButton('Мне повезёт!')
-    itembtnc = types.KeyboardButton('Настройка')
-    markup.add(itembtna, itembtnv, itembtnc)
+    itembtn_start = types.KeyboardButton('В начало')
+    itembtn_random = types.KeyboardButton('Мне повезёт!')
+    itembtn_settings = types.KeyboardButton('Настройка')
+    markup.add(itembtn_start, itembtn_random, itembtn_settings)
     bot.send_message(message.from_user.id, msg, reply_markup=markup)
 
 
@@ -56,11 +58,32 @@ def change_language(message):
 
 @bot.message_handler(content_types=["text"])
 def get_text_message(message):
-    query = message.text
-    msg = search_wiki(query)
-    bot.send_message(message.from_user.id, msg)
-    url = return_url(query)
-    bot.send_message(message.from_user.id, url)
+    if message.text == 'В начало':
+        send_welcome(message)
+    elif message.text == 'Мне повезёт!':
+        random_page(message)
+    else:
+        try:
+            query = message.text
+            msg = search_wiki(query)
+            bot.send_message(message.from_user.id, msg)
+            url = return_url(query)
+            bot.send_message(message.from_user.id, url)
+        except wikipedia.exceptions.DisambiguationError:
+            msg = 'Упс, я озадачен твоим запросом, уж больно много вариантов. \nПопробуй уточнить:'
+            bot.send_message(message.from_user.id, msg)
+        except wikipedia.exceptions.HTTPTimeoutError:
+            msg = 'Упс, видимо, мне не хотят отвечать... \nДавай  подождём, пусть они там немного разгрузятся.'
+            bot.send_message(message.from_user.id, msg)
+        except wikipedia.exceptions.PageError:
+            msg = 'Упс, видимо, такой статьи не существует... \nПопробуй поискать что-нибудь другое.'
+            bot.send_message(message.from_user.id, msg)
+        except wikipedia.exceptions.RedirectError:
+            msg = 'Упс, нас пытаютсякуда-то перенаправить... \nПопробуй поискать еще раз.'
+            bot.send_message(message.from_user.id, msg)
+        except wikipedia.exceptions.WikipediaException:
+            msg = 'Упс, что-то пошло не так... \nПопробуй поискать еще раз.'
+            bot.send_message(message.from_user.id, msg)
 
 
 bot.polling(none_stop=True, interval=0)
