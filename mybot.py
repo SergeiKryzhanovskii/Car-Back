@@ -1,11 +1,14 @@
+# -*- coding: utf-8 -*-
+
 import telebot
 import wikipedia
 import config
 from telebot import types
 from wikipedia import exceptions
 
+"""It's function search in Wikipedia"""
 
-"""Функция поиска в Вики"""
+
 def search_wiki(query):
     global language
     wikipedia.set_lang(language)
@@ -13,7 +16,9 @@ def search_wiki(query):
     return result
 
 
-"""Функция вывода ссылки на статью"""
+"""Function return url search page"""
+
+
 def return_url(query):
     global language
     wikipedia.set_lang(language)
@@ -22,23 +27,27 @@ def return_url(query):
     return url
 
 
-"""Эмоджи"""
+"""List of Emoji"""
 glass = u'\U0001F50E'
+a = None
+b = None
+c = None
 
+
+"""Activate bot"""
 bot = telebot.TeleBot(config.token)
 language = 'ru'
 
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
-    photo = open('photo_bot.jpg', 'rb')
+    photo = open('photo_bot.png', 'rb')
     bot.send_photo(message.from_user.id, photo)
     msg = 'Привет, я бот-помощник для поиска в Википедии.\n' + 'Напиши мне, что нужно найти ' + glass + ':'
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     itembtn_start = types.KeyboardButton('В начало')
     itembtn_random = types.KeyboardButton('Мне повезёт!')
-    itembtn_settings = types.KeyboardButton('Настройка')
-    markup.add(itembtn_start, itembtn_random, itembtn_settings)
+    markup.add(itembtn_start, itembtn_random)
     bot.send_message(message.from_user.id, msg, reply_markup=markup)
 
 
@@ -73,13 +82,6 @@ def get_text_message(message):
         send_welcome(message)
     elif message.text == 'Мне повезёт!':
         random_page(message)
-    elif message.text == 'Настройка':
-        keyboard = types.InlineKeyboardMarkup()
-        key_ru = types.InlineKeyboardButton(text='ru', callback_data='val_ru')
-        keyboard.add(key_ru)
-        key_en = types.InlineKeyboardButton(text='en', callback_data='val_en')
-        keyboard.add(key_en)
-        bot.send_message(message.from_user.id, text='Выбери язык, на котором тебе нужно напечатать статью.', reply_markup=keyboard)
     else:
         try:
             query = message.text
@@ -104,16 +106,5 @@ def get_text_message(message):
             bot.send_message(message.from_user.id, msg)
 
 
-@bot.callback_query_handler(func=lambda call: True)
-def call_worker(call):
-    global language
-    if call.data == 'val_ru':
-        wikipedia.set_lang('ru')
-        language = 'ru'
-    elif call.data == 'val_en':
-        wikipedia.set_lang('en')
-        language = 'en'
-
-
-
-bot.polling(none_stop=True, interval=0)
+if __name__ == "__main__":
+    bot.polling(none_stop=True, interval=0)
