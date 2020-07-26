@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+# Python 3.8.4
+#
+# This is a bot for finding articles on Wikipedia.
 
 import telebot
 import wikipedia
@@ -6,7 +9,7 @@ import config
 from telebot import types
 from wikipedia import exceptions
 
-"""It's function search in Wikipedia"""
+"""Function search on Wikipedia"""
 
 
 def search_wiki(query):
@@ -29,9 +32,7 @@ def return_url(query):
 
 """List of Emoji"""
 glass = u'\U0001F50E'
-a = None
-b = None
-c = None
+robot = u'\U0001F916'
 
 
 """Activate bot"""
@@ -43,7 +44,9 @@ language = 'ru'
 def send_welcome(message):
     photo = open('photo_bot.png', 'rb')
     bot.send_photo(message.from_user.id, photo)
-    msg = 'Привет, я бот-помощник для поиска в Википедии.\n' + 'Напиши мне, что нужно найти ' + glass + ':'
+    msg = 'Привет, я бот-помощник для поиска в Википедии.\n'\
+          'Для начала работы со мной - пришли сообщение с фразой или словом, которые нужно найти.\n' \
+          + robot + ' Напиши мне, что нужно найти ' + glass + ':'
     markup = types.ReplyKeyboardMarkup(row_width=1, resize_keyboard=True)
     itembtn_start = types.KeyboardButton('В начало')
     itembtn_random = types.KeyboardButton('Мне повезёт!')
@@ -60,19 +63,19 @@ def random_page(message):
         url = return_url(random_pg)
         bot.send_message(message.from_user.id, url)
     except wikipedia.exceptions.DisambiguationError:
-        msg = 'Упс, я озадачен твоим запросом, уж больно много вариантов. \nПопробуй уточнить:'
+        msg = robot + '\nУпс, я озадачен твоим запросом, уж больно много вариантов. \nПопробуй уточнить:'
         bot.send_message(message.from_user.id, msg)
     except wikipedia.exceptions.HTTPTimeoutError:
-        msg = 'Упс, видимо, мне не хотят отвечать... \nДавай  подождём, пусть они там немного разгрузятся.'
+        msg = robot + '\nУпс, видимо, мне не хотят отвечать... \nДавай  подождём, пусть они там немного разгрузятся.'
         bot.send_message(message.from_user.id, msg)
     except wikipedia.exceptions.PageError:
-        msg = 'Упс, видимо, такой статьи не существует... \nПопробуй поискать что-нибудь другое.'
+        msg = robot + '\nУпс, видимо, такой статьи не существует... \nПопробуй поискать что-нибудь другое.'
         bot.send_message(message.from_user.id, msg)
     except wikipedia.exceptions.RedirectError:
-        msg = 'Упс, нас пытаютсякуда-то перенаправить... \nПопробуй поискать еще раз.'
+        msg = robot + '\nУпс, нас пытаютсякуда-то перенаправить... \nПопробуй поискать еще раз.'
         bot.send_message(message.from_user.id, msg)
     except wikipedia.exceptions.WikipediaException:
-        msg = 'Упс, что-то пошло не так... \nПопробуй поискать еще раз.'
+        msg = robot + '\nУпс, что-то пошло не так... \nПопробуй поискать еще раз.'
         bot.send_message(message.from_user.id, msg)
 
 
@@ -90,19 +93,19 @@ def get_text_message(message):
             url = return_url(query)
             bot.send_message(message.from_user.id, url)
         except wikipedia.exceptions.DisambiguationError:
-            msg = 'Упс, я озадачен твоим запросом, уж больно много вариантов. \nПопробуй уточнить:'
+            msg = robot + '\nУпс, я озадачен твоим запросом, уж больно много вариантов. \nПопробуй уточнить:'
             bot.send_message(message.from_user.id, msg)
         except wikipedia.exceptions.HTTPTimeoutError:
-            msg = 'Упс, видимо, мне не хотят отвечать... \nДавай  подождём, пусть они там немного разгрузятся.'
+            msg = robot + '\nУпс, видимо, мне не хотят отвечать... \nДавай  подождём, пусть они там немного разгрузятся.'
             bot.send_message(message.from_user.id, msg)
         except wikipedia.exceptions.PageError:
-            msg = 'Упс, видимо, такой статьи не существует... \nПопробуй поискать что-нибудь другое.'
+            msg = robot + '\nУпс, видимо, такой статьи не существует... \nПопробуй поискать что-нибудь другое.'
             bot.send_message(message.from_user.id, msg)
         except wikipedia.exceptions.RedirectError:
-            msg = 'Упс, нас пытаютсякуда-то перенаправить... \nПопробуй поискать еще раз.'
+            msg =  robot + '\nУпс, нас пытаютсякуда-то перенаправить... \nПопробуй поискать еще раз.'
             bot.send_message(message.from_user.id, msg)
         except wikipedia.exceptions.WikipediaException:
-            msg = 'Упс, что-то пошло не так... \nПопробуй поискать еще раз.'
+            msg = robot + '\nУпс, что-то пошло не так... \nПопробуй поискать еще раз.'
             bot.send_message(message.from_user.id, msg)
 
 
