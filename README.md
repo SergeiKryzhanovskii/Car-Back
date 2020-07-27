@@ -1,4 +1,4 @@
-# Telebot Wikipedia
+# Telebot Wikipedia [Unofficial]
 ### Main stack
 - [Python](https://www.python.org/downloads/ "Python") v3.8.4;
 - [Wikipedia](https://pypi.org/project/wikipedia/) v1.4.0;
