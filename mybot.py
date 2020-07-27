@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 # Python 3.8.4
-#
-# This is a bot for finding articles on Wikipedia.
+
 
 import telebot
 import wikipedia
@@ -42,7 +41,7 @@ language = 'ru'
 
 @bot.message_handler(commands=['start', 'help'])
 def send_welcome(message):
-    photo = open('photo_bot.png', 'rb')
+    photo = open('images/photo_bot.png', 'rb')
     bot.send_photo(message.from_user.id, photo)
     msg = 'Привет, я бот-помощник для поиска в Википедии.\n'\
           'Для начала работы со мной - пришли сообщение с фразой или словом, которые нужно найти.\n' \
